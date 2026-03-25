@@ -110,6 +110,13 @@ public class PBXFileSystemSynchronizedBuildFileExceptionSet: PBXFileSystemSynchr
             }))
         }
         dictionary["target"] = .string(CommentedString(target.reference.value, comment: target.name))
-        return (key: CommentedString(reference, comment: "PBXFileSystemSynchronizedBuildFileExceptionSet"), value: .dictionary(dictionary))
+
+        let syncedFolder = target.fileSystemSynchronizedGroups?.first(where: { $0.exceptions?.contains(self) ?? false })
+        let comment = if let syncedFolder {
+            "Exceptions for \"\(syncedFolder.name ?? syncedFolder.path ?? "unknown")\" folder in \"\(target.name)\" target"
+        } else {
+            "PBXFileSystemSynchronizedBuildFileExceptionSet"
+        }
+        return (key: CommentedString(reference, comment: comment), value: .dictionary(dictionary))
     }
 }
