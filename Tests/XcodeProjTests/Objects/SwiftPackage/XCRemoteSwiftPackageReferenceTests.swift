@@ -12,7 +12,9 @@ final class XCRemoteSwiftPackageReferenceTests: XCTestCase {
             "requirement": [
                 "kind": "revision",
                 "revision": "abc",
-            ]]]
+            ],
+            "traits": ["Tagged"],
+        ]]
         let data = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
 
         // When
@@ -23,6 +25,7 @@ final class XCRemoteSwiftPackageReferenceTests: XCTestCase {
         XCTAssertEqual(got.reference.value, "ref")
         XCTAssertEqual(got.repositoryURL, "url")
         XCTAssertEqual(got.versionRequirement, XCRemoteSwiftPackageReference.VersionRequirement.revision("abc"))
+        XCTAssertEqual(got.traits, ["Tagged"])
     }
 
     func test_versionRequirement_returnsTheRightPlistValues_when_revision() throws {
@@ -114,7 +117,8 @@ final class XCRemoteSwiftPackageReferenceTests: XCTestCase {
         // When
         let proj = PBXProj()
         let subject = XCRemoteSwiftPackageReference(repositoryURL: "repository",
-                                                    versionRequirement: .exact("1.2.3"))
+                                                    versionRequirement: .exact("1.2.3"),
+                                                    traits: ["Tagged"])
 
         // Given
         let got = try subject.plistKeyAndValue(proj: proj, reference: "ref")
@@ -127,6 +131,8 @@ final class XCRemoteSwiftPackageReferenceTests: XCTestCase {
                 "kind": "exactVersion",
                 "version": "1.2.3",
             ]),
+            // Root-selected traits must survive a PBX round trip.
+            "traits": .array(["Tagged"]),
         ]))
     }
 
