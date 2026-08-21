@@ -49,6 +49,29 @@ final class PBXBuildRuleTests: XCTestCase {
         XCTAssertEqual(subject, another)
     }
 
+    func test_decodingAcceptsScalarScript() throws {
+        let buildRule = try decodeBuildRule(script: "echo scalar")
+
+        // Xcode's ordinary PBX spelling remains a single
+        // scalar string and must not gain a newline during semantic decoding.
+        XCTAssertEqual(buildRule.script, "echo scalar")
+    }
+
+    func test_decodingAcceptsScriptLineArray() throws {
+        let buildRule = try decodeBuildRule(
+            script: ["echo first", "", "echo last", ""]
+        )
+
+        // cargo-xcode writes PBXBuildRule.script as an
+        // array. Xcode treats it as lines, including its final line boundary
+        // and any authored trailing empty line.
+        XCTAssertEqual(buildRule.script, "echo first\n\necho last\n\n")
+    }
+
+    func test_decodingRejectsInvalidScriptArrayElements() throws {
+        XCTAssertThrowsError(try decodeBuildRule(script: ["echo valid", 42]))
+    }
+
     func test_plistValuesOmitAbsentFileListPaths() throws {
         let dictionary = try XCTUnwrap(subject.plistKeyAndValue(proj: PBXProj(), reference: "RULE").value.dictionary)
 
@@ -67,5 +90,26 @@ final class PBXBuildRuleTests: XCTestCase {
             dictionary["outputFileListPaths"],
             .array([.string(CommentedString("$(SRCROOT)/outputs.xcfilelist"))])
         )
+    }
+
+    private func decodeBuildRule(script: Any) throws -> PBXBuildRule {
+        let data = try JSONSerialization.data(
+            withJSONObject: ["BUILD_RULE": [
+                "reference": "BUILD_RULE",
+                "compilerSpec": "com.apple.compilers.proxy.script",
+                "fileType": "pattern.proxy",
+                "isEditable": "0",
+                "script": script,
+            ]],
+            options: []
+        )
+        let rules = try XcodeprojJSONDecoder().decode(
+            [String: PBXBuildRule].self,
+            from: data
+        )
+        guard let rule = rules["BUILD_RULE"] else {
+            throw CocoaError(.coderValueNotFound)
+        }
+        return rule
     }
 }

@@ -105,7 +105,21 @@ public final class PBXBuildRule: PBXObject {
         inputFileListPaths = try container.decodeIfPresent(.inputFileListPaths)
         outputFileListPaths = try container.decodeIfPresent(.outputFileListPaths)
         outputFilesCompilerFlags = try container.decodeIfPresent(.outputFilesCompilerFlags)
-        script = try container.decodeIfPresent(.script)
+        if container.contains(.script), try container.decodeNil(forKey: .script) == false {
+            if let scalarScript = try? container.decode(String.self, forKey: .script) {
+                script = scalarScript
+            } else {
+                let scriptLines = try container.decode([String].self, forKey: .script)
+                // Some project generators serialize a shell script as a PBX
+                // string array. Xcode interprets that spelling as lines and
+                // retains a final newline in the semantic script contents.
+                script = scriptLines.isEmpty
+                    ? ""
+                    : scriptLines.joined(separator: "\n") + "\n"
+            }
+        } else {
+            script = nil
+        }
         runOncePerArchitecture = try container.decodeIntBoolIfPresent(.runOncePerArchitecture)
         try super.init(from: decoder)
     }
