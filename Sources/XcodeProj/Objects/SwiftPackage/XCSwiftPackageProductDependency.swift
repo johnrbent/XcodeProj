@@ -18,6 +18,11 @@ public class XCSwiftPackageProductDependency: PBXContainerItem, PlistSerializabl
         }
     }
 
+    /// Identifier of the package reference object, including local package references.
+    public var packageReferenceIdentifier: String? {
+        packageReference?.value
+    }
+
     /// Is it a Plugin.
     var isPlugin: Bool
 

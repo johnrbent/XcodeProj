@@ -20,7 +20,32 @@ final class XCSwiftPackageProductDependencyTests: XCTestCase {
         // Then
         XCTAssertEqual(got.productName, "xcodeproj")
         XCTAssertEqual(got.packageReference?.value, "packageReference")
+        XCTAssertEqual(got.packageReferenceIdentifier, "packageReference")
         XCTAssertEqual(got.isPlugin, false)
+    }
+
+    func test_packageReferenceIdentifier() throws {
+        let remotePackage = XCRemoteSwiftPackageReference(repositoryURL: "repository")
+        let remoteDependency = XCSwiftPackageProductDependency(productName: "remote", package: remotePackage)
+        let missingDependency = XCSwiftPackageProductDependency(productName: "missing")
+
+        XCTAssertEqual(remoteDependency.packageReferenceIdentifier, remotePackage.reference.value)
+        XCTAssertNil(missingDependency.packageReferenceIdentifier)
+
+        let data = try PropertyListEncoder().encode([
+            "reference": [
+                "productName": "local",
+                "package": "localPackageReference",
+            ],
+        ])
+        let localDependency = try XCTUnwrap(
+            XcodeprojPropertyListDecoder().decode(
+                [String: XCSwiftPackageProductDependency].self,
+                from: data
+            )["reference"]
+        )
+
+        XCTAssertEqual(localDependency.packageReferenceIdentifier, "localPackageReference")
     }
 
     func test_initAsPlugin() throws {
