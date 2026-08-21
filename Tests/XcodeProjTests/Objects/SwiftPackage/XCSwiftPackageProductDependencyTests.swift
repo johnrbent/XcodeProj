@@ -85,6 +85,38 @@ final class XCSwiftPackageProductDependencyTests: XCTestCase {
         ]))
     }
 
+    func test_plistValuesWithLocalPackageReference() throws {
+        let proj = PBXProj()
+        let package = XCLocalSwiftPackageReference(relativePath: "../LocalPackage")
+        let subject = XCSwiftPackageProductDependency(productName: "LocalProduct")
+        subject.packageReference = package.reference
+
+        let got = try subject.plistKeyAndValue(proj: proj, reference: "reference")
+
+        XCTAssertEqual(got.value, .dictionary([
+            "isa": "XCSwiftPackageProductDependency",
+            "productName": "LocalProduct",
+            "package": .string(.init(
+                package.reference.value,
+                comment: "XCLocalSwiftPackageReference \"../LocalPackage\""
+            )),
+        ]))
+    }
+
+    func test_plistValuesPreservesUnresolvedPackageReference() throws {
+        let proj = PBXProj()
+        let subject = XCSwiftPackageProductDependency(productName: "MissingProduct")
+        subject.packageReference = PBXObjectReference("missingPackage")
+
+        let got = try subject.plistKeyAndValue(proj: proj, reference: "reference")
+
+        XCTAssertEqual(got.value, .dictionary([
+            "isa": "XCSwiftPackageProductDependency",
+            "productName": "MissingProduct",
+            "package": "missingPackage",
+        ]))
+    }
+
     func test_plistValuesAsPlugin() throws {
         // Given
         let proj = PBXProj()

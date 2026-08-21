@@ -62,8 +62,15 @@ public class XCSwiftPackageProductDependency: PBXContainerItem, PlistSerializabl
     func plistKeyAndValue(proj: PBXProj, reference: String) throws -> (key: CommentedString, value: PlistValue) {
         var dictionary = try super.plistValues(proj: proj, reference: reference)
         dictionary["isa"] = .string(CommentedString(XCSwiftPackageProductDependency.isa))
-        if let package {
-            dictionary["package"] = .string(.init(package.reference.value, comment: "XCRemoteSwiftPackageReference \"\(package.name ?? "")\""))
+        if let packageReference {
+            let comment: String? = if let remotePackage: XCRemoteSwiftPackageReference = packageReference.getObject() {
+                "XCRemoteSwiftPackageReference \"\(remotePackage.name ?? "")\""
+            } else if let localPackage: XCLocalSwiftPackageReference = packageReference.getObject() {
+                "XCLocalSwiftPackageReference \"\(localPackage.name ?? "")\""
+            } else {
+                nil
+            }
+            dictionary["package"] = .string(.init(packageReference.value, comment: comment))
         }
         if isPlugin {
             dictionary["productName"] = .string(.init("plugin:" + productName))
