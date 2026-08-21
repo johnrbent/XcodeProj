@@ -61,6 +61,7 @@ public final class PBXCopyFilesBuildPhase: PBXBuildPhase {
     fileprivate enum CodingKeys: String, CodingKey {
         case dstPath
         case dstSubfolderSpec
+        case dstSubfolder
         case name
     }
 
@@ -68,6 +69,18 @@ public final class PBXCopyFilesBuildPhase: PBXBuildPhase {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         dstPath = try container.decodeIfPresent(.dstPath)
         dstSubfolderSpec = try container.decodeIntIfPresent(.dstSubfolderSpec).flatMap(SubFolder.init)
+        if dstSubfolderSpec == nil,
+           let symbolicDestination: String = try container.decodeIfPresent(.dstSubfolder)
+        {
+            switch symbolicDestination.lowercased() {
+            case "plugins":
+                dstSubfolderSpec = .plugins
+            case "product":
+                dstSubfolderSpec = .productsDirectory
+            default:
+                break
+            }
+        }
         name = try container.decodeIfPresent(.name)
         try super.init(from: decoder)
     }

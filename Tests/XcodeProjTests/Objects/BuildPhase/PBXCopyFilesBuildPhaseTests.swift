@@ -76,6 +76,43 @@ final class PBXCopyFilesBuildPhaseTests: XCTestCase {
         } catch {}
     }
 
+    func test_init_decodesSymbolicPluginsDestination() throws {
+        var dictionary = testDictionary()
+        dictionary.removeValue(forKey: "dstSubfolderSpec")
+        dictionary["dstSubfolder"] = "PlugIns"
+        let data = try JSONSerialization.data(
+            withJSONObject: ["PHASE": dictionary],
+            options: []
+        )
+        let decoder = XcodeprojJSONDecoder()
+
+        let phase = try XCTUnwrap(
+            decoder.decode([String: PBXCopyFilesBuildPhase].self, from: data)["PHASE"]
+        )
+
+        XCTAssertEqual(phase.dstSubfolderSpec, .plugins)
+    }
+
+    func test_init_decodesSymbolicProductDestination() throws {
+        var dictionary = testDictionary()
+        dictionary.removeValue(forKey: "dstSubfolderSpec")
+        dictionary["dstSubfolder"] = "Product"
+        let data = try JSONSerialization.data(
+            withJSONObject: ["PHASE": dictionary],
+            options: []
+        )
+        let decoder = XcodeprojJSONDecoder()
+
+        // Modern Xcode writes symbolic `Product` for a
+        // built-products copy destination. Dropping it makes clients default
+        // to the unrelated Executables directory.
+        let phase = try XCTUnwrap(
+            decoder.decode([String: PBXCopyFilesBuildPhase].self, from: data)["PHASE"]
+        )
+
+        XCTAssertEqual(phase.dstSubfolderSpec, .productsDirectory)
+    }
+
     func test_init_fails_whenFilesIsMissing() {
         var dictionary = testDictionary()
         dictionary.removeValue(forKey: "files")
