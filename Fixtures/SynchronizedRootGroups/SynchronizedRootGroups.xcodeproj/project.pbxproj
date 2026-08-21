@@ -23,7 +23,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		6CF05BA32C53F97F00EF267F /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		6CF05BA32C53F97F00EF267F /* Exceptions for "SynchronizedRootGroups" folder in "SynchronizedRootGroups" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Exception/Exception.swift,
@@ -48,7 +48,7 @@
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		6CF05B9D2C53F64800EF267F /* SynchronizedRootGroups */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (6CF05BA32C53F97F00EF267F /* PBXFileSystemSynchronizedBuildFileExceptionSet */, F841A9D12D63B00A00059ED6 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SynchronizedRootGroups; sourceTree = "<group>"; };
+		6CF05B9D2C53F64800EF267F /* SynchronizedRootGroups */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (6CF05BA32C53F97F00EF267F /* Exceptions for "SynchronizedRootGroups" folder in "SynchronizedRootGroups" target */, F841A9D12D63B00A00059ED6 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SynchronizedRootGroups; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */

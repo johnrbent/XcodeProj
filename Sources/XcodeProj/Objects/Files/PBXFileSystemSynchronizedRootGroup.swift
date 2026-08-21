@@ -90,7 +90,8 @@ public class PBXFileSystemSynchronizedRootGroup: PBXFileElement {
         dictionary["isa"] = .string(CommentedString(type(of: self).isa))
         if let exceptions, !exceptions.isEmpty {
             dictionary["exceptions"] = .array(exceptions.map { exception in
-                .string(CommentedString(exception.reference.value, comment: type(of: exception).isa))
+                let comment = (exception as? PBXFileSystemSynchronizedBuildFileExceptionSet)?.comment() ?? type(of: exception).isa
+                return .string(CommentedString(exception.reference.value, comment: comment))
             })
         }
         if let explicitFileTypes {

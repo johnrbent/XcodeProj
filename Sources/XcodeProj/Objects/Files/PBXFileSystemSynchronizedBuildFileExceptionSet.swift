@@ -87,6 +87,14 @@ public class PBXFileSystemSynchronizedBuildFileExceptionSet: PBXFileSystemSynchr
 
     // MARK: - PlistSerializable
 
+    func comment() -> String {
+        if let syncedFolder = target.fileSystemSynchronizedGroups?.first(where: { $0.exceptions?.contains(self) ?? false }) {
+            return "Exceptions for \"\(syncedFolder.name ?? syncedFolder.path ?? "unknown")\" folder in \"\(target.name)\" target"
+        } else {
+            return "PBXFileSystemSynchronizedBuildFileExceptionSet"
+        }
+    }
+
     func plistKeyAndValue(proj _: PBXProj, reference: String) throws -> (key: CommentedString, value: PlistValue) {
         var dictionary: [CommentedString: PlistValue] = [:]
         dictionary["isa"] = .string(CommentedString(PBXFileSystemSynchronizedBuildFileExceptionSet.isa))
@@ -111,12 +119,6 @@ public class PBXFileSystemSynchronizedBuildFileExceptionSet: PBXFileSystemSynchr
         }
         dictionary["target"] = .string(CommentedString(target.reference.value, comment: target.name))
 
-        let syncedFolder = target.fileSystemSynchronizedGroups?.first(where: { $0.exceptions?.contains(self) ?? false })
-        let comment = if let syncedFolder {
-            "Exceptions for \"\(syncedFolder.name ?? syncedFolder.path ?? "unknown")\" folder in \"\(target.name)\" target"
-        } else {
-            "PBXFileSystemSynchronizedBuildFileExceptionSet"
-        }
-        return (key: CommentedString(reference, comment: comment), value: .dictionary(dictionary))
+        return (key: CommentedString(reference, comment: comment()), value: .dictionary(dictionary))
     }
 }

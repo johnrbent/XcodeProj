@@ -26,4 +26,21 @@ final class PBXFileSystemSynchronizedBuildFileExceptionSetTests: XCTestCase {
         let another = PBXFileSystemSynchronizedBuildFileExceptionSet.fixture(target: target)
         XCTAssertEqual(subject, another)
     }
+
+    func test_comment_describesTheSynchronizedFolderAndTarget() {
+        let proj = PBXProj()
+        target = PBXNativeTarget(name: "App")
+        subject = PBXFileSystemSynchronizedBuildFileExceptionSet.fixture(target: target)
+        let synchronizedGroup = PBXFileSystemSynchronizedRootGroup.fixture(path: "Sources", exceptions: [subject])
+        proj.add(object: target)
+        proj.add(object: subject)
+        proj.add(object: synchronizedGroup)
+        target.fileSystemSynchronizedGroups = [synchronizedGroup]
+
+        XCTAssertEqual(subject.comment(), "Exceptions for \"Sources\" folder in \"App\" target")
+    }
+
+    func test_comment_fallsBackToIsaWithoutASynchronizedFolder() {
+        XCTAssertEqual(subject.comment(), PBXFileSystemSynchronizedBuildFileExceptionSet.isa)
+    }
 }

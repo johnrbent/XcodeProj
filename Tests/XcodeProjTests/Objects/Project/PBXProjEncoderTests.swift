@@ -294,7 +294,7 @@
             let lines = lines(fromFile: encodeProject(settings: settings))
 
             let beginGroup = lines.findLine("/* Begin PBXFileSystemSynchronizedRootGroup section */")
-            var line = lines.validate(line: "6CF05B9D2C53F64800EF267F /* SynchronizedRootGroups */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (6CF05BA32C53F97F00EF267F /* PBXFileSystemSynchronizedBuildFileExceptionSet */, F841A9D12D63B00A00059ED6 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SynchronizedRootGroups; sourceTree = \"<group>\"; };", after: beginGroup)
+            var line = lines.validate(line: "6CF05B9D2C53F64800EF267F /* SynchronizedRootGroups */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (6CF05BA32C53F97F00EF267F /* Exceptions for \"SynchronizedRootGroups\" folder in \"SynchronizedRootGroups\" target */, F841A9D12D63B00A00059ED6 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SynchronizedRootGroups; sourceTree = \"<group>\"; };", after: beginGroup)
             line = lines.validate(line: "/* End PBXFileSystemSynchronizedRootGroup section */", after: line)
         }
 
@@ -307,7 +307,7 @@
             let lines = lines(fromFile: encodeProject(settings: settings))
 
             let beginGroup = lines.findLine("/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */")
-            var line = lines.validate(line: "6CF05BA32C53F97F00EF267F /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {", after: beginGroup)
+            var line = lines.validate(line: "6CF05BA32C53F97F00EF267F /* Exceptions for \"SynchronizedRootGroups\" folder in \"SynchronizedRootGroups\" target */ = {", after: beginGroup)
             line = lines.validate(line: "isa = PBXFileSystemSynchronizedBuildFileExceptionSet;", after: line)
             line = lines.validate(line: "membershipExceptions = (", after: line)
             line = lines.validate(line: "Exception/Exception.swift,", after: line)
