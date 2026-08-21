@@ -8,7 +8,7 @@ import Foundation
 /// - notFound: the project cannot be found.
 /// - pbxProjNotFound: the .pbxproj file couldn't be found inside the project folder.
 /// - xcworkspaceNotFound: the workspace cannot be found at the given path.
-public enum XCodeProjError: Error, CustomStringConvertible, Sendable {
+public enum XCodeProjError: Error, CustomStringConvertible, LocalizedError, Sendable {
     case notFound(path: Path)
     case pbxprojNotFound(path: Path)
     case xcworkspaceNotFound(path: Path)
@@ -23,6 +23,8 @@ public enum XCodeProjError: Error, CustomStringConvertible, Sendable {
             "The project doesn't contain a .xcworkspace at path: \(path.string)"
         }
     }
+
+    public var errorDescription: String? { description }
 }
 
 // MARK: - XCSharedData
