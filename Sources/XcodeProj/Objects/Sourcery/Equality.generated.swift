@@ -44,6 +44,8 @@ extension PBXBuildRule {
         if name != rhs.name { return false }
         if outputFiles != rhs.outputFiles { return false }
         if inputFiles != rhs.inputFiles { return false }
+        if inputFileListPaths != rhs.inputFileListPaths { return false }
+        if outputFileListPaths != rhs.outputFileListPaths { return false }
         if outputFilesCompilerFlags != rhs.outputFilesCompilerFlags { return false }
         if script != rhs.script { return false }
         if runOncePerArchitecture != rhs.runOncePerArchitecture { return false }

@@ -28,6 +28,12 @@ public final class PBXBuildRule: PBXObject {
     /// Element input files.
     public var inputFiles: [String]?
 
+    /// Paths to input file lists.
+    public var inputFileListPaths: [String]?
+
+    /// Paths to output file lists.
+    public var outputFileListPaths: [String]?
+
     /// Element output files compiler flags.
     public var outputFilesCompilerFlags: [String]?
 
@@ -47,6 +53,8 @@ public final class PBXBuildRule: PBXObject {
                 dependencyFile: String? = nil,
                 outputFiles: [String] = [],
                 inputFiles: [String]? = nil,
+                inputFileListPaths: [String]? = nil,
+                outputFileListPaths: [String]? = nil,
                 outputFilesCompilerFlags: [String]? = nil,
                 script: String? = nil,
                 runOncePerArchitecture: Bool? = nil) {
@@ -58,6 +66,8 @@ public final class PBXBuildRule: PBXObject {
         self.dependencyFile = dependencyFile
         self.outputFiles = outputFiles
         self.inputFiles = inputFiles
+        self.inputFileListPaths = inputFileListPaths
+        self.outputFileListPaths = outputFileListPaths
         self.outputFilesCompilerFlags = outputFilesCompilerFlags
         self.script = script
         self.runOncePerArchitecture = runOncePerArchitecture
@@ -75,6 +85,8 @@ public final class PBXBuildRule: PBXObject {
         case dependencyFile
         case outputFiles
         case inputFiles
+        case inputFileListPaths
+        case outputFileListPaths
         case outputFilesCompilerFlags
         case script
         case runOncePerArchitecture
@@ -90,6 +102,8 @@ public final class PBXBuildRule: PBXObject {
         dependencyFile = try container.decodeIfPresent(.dependencyFile)
         outputFiles = try container.decodeIfPresent(.outputFiles) ?? []
         inputFiles = try container.decodeIfPresent(.inputFiles)
+        inputFileListPaths = try container.decodeIfPresent(.inputFileListPaths)
+        outputFileListPaths = try container.decodeIfPresent(.outputFileListPaths)
         outputFilesCompilerFlags = try container.decodeIfPresent(.outputFilesCompilerFlags)
         script = try container.decodeIfPresent(.script)
         runOncePerArchitecture = try container.decodeIntBoolIfPresent(.runOncePerArchitecture)
@@ -125,6 +139,12 @@ extension PBXBuildRule: PlistSerializable {
         dictionary["outputFiles"] = .array(outputFiles.map { .string(CommentedString($0)) })
         if let inputFiles {
             dictionary["inputFiles"] = .array(inputFiles.map { .string(CommentedString($0)) })
+        }
+        if let inputFileListPaths {
+            dictionary["inputFileListPaths"] = .array(inputFileListPaths.map { .string(CommentedString($0)) })
+        }
+        if let outputFileListPaths {
+            dictionary["outputFileListPaths"] = .array(outputFileListPaths.map { .string(CommentedString($0)) })
         }
         if let outputFilesCompilerFlags {
             dictionary["outputFilesCompilerFlags"] = .array(outputFilesCompilerFlags.map { PlistValue.string(CommentedString($0)) })
