@@ -104,6 +104,7 @@ extension PBXFileReference {
         if fileEncoding != rhs.fileEncoding { return false }
         if explicitFileType != rhs.explicitFileType { return false }
         if lastKnownFileType != rhs.lastKnownFileType { return false }
+        if regionVariantName != rhs.regionVariantName { return false }
         if lineEnding != rhs.lineEnding { return false }
         if languageSpecificationIdentifier != rhs.languageSpecificationIdentifier { return false }
         if xcLanguageSpecificationIdentifier != rhs.xcLanguageSpecificationIdentifier { return false }

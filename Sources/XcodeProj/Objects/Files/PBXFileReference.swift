@@ -15,6 +15,9 @@ public final class PBXFileReference: PBXFileElement {
     /// Derived file type. For a file named "foo.swift" this value would be "sourcecode.swift"
     public var lastKnownFileType: String?
 
+    /// Localization region represented by this file reference.
+    public var regionVariantName: String?
+
     /// The XCFramework's expected code signature. `nil` if not an XCFramework reference or if the XCFramework is not signed.
     public var expectedSignature: String?
 
@@ -40,6 +43,7 @@ public final class PBXFileReference: PBXFileElement {
     ///   - fileEncoding: text encoding of file content.
     ///   - explicitFileType: user-specified file type.
     ///   - lastKnownFileType: derived file type.
+    ///   - regionVariantName: localization region represented by the file reference.
     ///   - path: file relative path from `sourceTree`, if different than `name`.
     ///   - includeInIndex: should the IDE index the file?
     ///   - wrapsLines: should the IDE wrap lines when editing the file?
@@ -56,6 +60,7 @@ public final class PBXFileReference: PBXFileElement {
                 fileEncoding: UInt? = nil,
                 explicitFileType: String? = nil,
                 lastKnownFileType: String? = nil,
+                regionVariantName: String? = nil,
                 path: String? = nil,
                 includeInIndex: Bool? = nil,
                 wrapsLines: Bool? = nil,
@@ -70,6 +75,7 @@ public final class PBXFileReference: PBXFileElement {
         self.fileEncoding = fileEncoding
         self.explicitFileType = explicitFileType
         self.lastKnownFileType = lastKnownFileType
+        self.regionVariantName = regionVariantName
         self.lineEnding = lineEnding
         self.expectedSignature = expectedSignature
         self.languageSpecificationIdentifier = languageSpecificationIdentifier
@@ -91,6 +97,7 @@ public final class PBXFileReference: PBXFileElement {
         case fileEncoding
         case explicitFileType
         case lastKnownFileType
+        case regionVariantName
         case lineEnding
         case expectedSignature
         case languageSpecificationIdentifier
@@ -103,6 +110,7 @@ public final class PBXFileReference: PBXFileElement {
         fileEncoding = try container.decodeIntIfPresent(.fileEncoding)
         explicitFileType = try container.decodeIfPresent(.explicitFileType)
         lastKnownFileType = try container.decodeIfPresent(.lastKnownFileType)
+        regionVariantName = try container.decodeIfPresent(.regionVariantName)
         lineEnding = try container.decodeIntIfPresent(.lineEnding)
         expectedSignature = try container.decodeIfPresent(.expectedSignature)
         languageSpecificationIdentifier = try container.decodeIfPresent(.languageSpecificationIdentifier)
@@ -126,6 +134,9 @@ public final class PBXFileReference: PBXFileElement {
         }
         if let explicitFileType {
             dictionary["explicitFileType"] = .string(CommentedString(explicitFileType))
+        }
+        if let regionVariantName {
+            dictionary["regionVariantName"] = .string(CommentedString(regionVariantName))
         }
         if let lineEnding {
             dictionary["lineEnding"] = .string(CommentedString("\(lineEnding)"))
