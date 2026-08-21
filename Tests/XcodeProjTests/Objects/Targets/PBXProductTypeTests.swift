@@ -106,4 +106,17 @@ final class PBXProductTypeTests: XCTestCase {
     func test_systemExtension_hasTheRightValue() {
         XCTAssertEqual(PBXProductType.systemExtension.rawValue, "com.apple.product-type.system-extension")
     }
+
+    func test_additionalNativeProductTypesHaveTheRightValuesAndExtensions() {
+        XCTAssertEqual(PBXProductType.hostBuildTool.rawValue, "com.apple.product-type.tool.host-build")
+        XCTAssertEqual(PBXProductType.hostBuildTool.fileExtension, nil)
+        XCTAssertEqual(PBXProductType.objectFile.rawValue, "com.apple.product-type.objfile")
+        XCTAssertEqual(PBXProductType.objectFile.fileExtension, "o")
+        XCTAssertEqual(PBXProductType.objectLibrary.rawValue, "org.swift.product-type.library.object")
+        XCTAssertEqual(PBXProductType.objectLibrary.fileExtension, "objlib")
+        XCTAssertEqual(PBXProductType.inAppPurchaseContent.rawValue, "com.apple.product-type.in-app-purchase-content")
+        XCTAssertEqual(PBXProductType.inAppPurchaseContent.fileExtension, nil)
+        XCTAssertEqual(PBXProductType.kernelExtension.rawValue, "com.apple.product-type.kernel-extension")
+        XCTAssertEqual(PBXProductType.kernelExtension.fileExtension, "kext")
+    }
 }

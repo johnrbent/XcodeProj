@@ -8,12 +8,15 @@ public enum PBXProductType: String, Decodable {
     case xcFramework = "com.apple.product-type.xcframework"
     case dynamicLibrary = "com.apple.product-type.library.dynamic"
     case staticLibrary = "com.apple.product-type.library.static"
+    case objectFile = "com.apple.product-type.objfile"
+    case objectLibrary = "org.swift.product-type.library.object"
     case bundle = "com.apple.product-type.bundle"
     case unitTestBundle = "com.apple.product-type.bundle.unit-test"
     case uiTestBundle = "com.apple.product-type.bundle.ui-testing"
     case appExtension = "com.apple.product-type.app-extension"
     case extensionKitExtension = "com.apple.product-type.extensionkit-extension"
     case commandLineTool = "com.apple.product-type.tool"
+    case hostBuildTool = "com.apple.product-type.tool.host-build"
     case watchApp = "com.apple.product-type.application.watchapp"
     case watch2App = "com.apple.product-type.application.watchapp2"
     case watch2AppContainer = "com.apple.product-type.application.watchapp2-container"
@@ -29,9 +32,11 @@ public enum PBXProductType: String, Decodable {
     case instrumentsPackage = "com.apple.product-type.instruments-package"
     case intentsServiceExtension = "com.apple.product-type.app-extension.intents-service"
     case onDemandInstallCapableApplication = "com.apple.product-type.application.on-demand-install-capable"
+    case inAppPurchaseContent = "com.apple.product-type.in-app-purchase-content"
     case metalLibrary = "com.apple.product-type.metal-library"
     case driverExtension = "com.apple.product-type.driver-extension"
     case systemExtension = "com.apple.product-type.system-extension"
+    case kernelExtension = "com.apple.product-type.kernel-extension"
 
     /// Returns the file extension for the given product type.
     public var fileExtension: String? {
@@ -44,6 +49,10 @@ public enum PBXProductType: String, Decodable {
             "dylib"
         case .staticLibrary:
             "a"
+        case .objectLibrary:
+            "objlib"
+        case .objectFile:
+            "o"
         case .bundle:
             "bundle"
         case .unitTestBundle, .uiTestBundle:
@@ -51,7 +60,7 @@ public enum PBXProductType: String, Decodable {
         case .appExtension, .extensionKitExtension, .tvExtension, .watchExtension, .watch2Extension, .messagesExtension, .stickerPack, .xcodeExtension,
              .intentsServiceExtension:
             "appex"
-        case .commandLineTool:
+        case .commandLineTool, .hostBuildTool:
             nil
         case .xpcService:
             "xpc"
@@ -67,7 +76,9 @@ public enum PBXProductType: String, Decodable {
             "systemextension"
         case .driverExtension:
             "dext"
-        case .none:
+        case .kernelExtension:
+            "kext"
+        case .inAppPurchaseContent, .none:
             nil
         }
     }
