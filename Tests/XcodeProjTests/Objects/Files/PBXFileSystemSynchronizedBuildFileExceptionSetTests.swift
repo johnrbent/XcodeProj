@@ -25,6 +25,42 @@ final class PBXFileSystemSynchronizedBuildFileExceptionSetTests: XCTestCase {
     func test_equal_returnsTheCorrectValue() {
         let another = PBXFileSystemSynchronizedBuildFileExceptionSet.fixture(target: target)
         XCTAssertEqual(subject, another)
+
+        another.platformFiltersByRelativePath = ["Sources/File.swift": ["ios"]]
+        XCTAssertNotEqual(subject, another)
+    }
+
+    func test_decodingPreservesPlatformFiltersByRelativePath() throws {
+        let data = try JSONSerialization.data(withJSONObject: [
+            "EXCEPTION": [
+                "reference": "EXCEPTION",
+                "target": "TARGET",
+                "platformFiltersByRelativePath": ["Sources/File.swift": ["ios", "macos"]],
+            ],
+        ])
+
+        let decoded = try XcodeprojJSONDecoder().decode(
+            [String: PBXFileSystemSynchronizedBuildFileExceptionSet].self,
+            from: data
+        )
+
+        XCTAssertEqual(
+            decoded["EXCEPTION"]?.platformFiltersByRelativePath,
+            ["Sources/File.swift": ["ios", "macos"]]
+        )
+    }
+
+    func test_plistValuesIncludePlatformFiltersByRelativePath() throws {
+        subject.platformFiltersByRelativePath = ["Sources/File.swift": ["ios", "macos"]]
+
+        let dictionary = try XCTUnwrap(subject.plistKeyAndValue(proj: PBXProj(), reference: "EXCEPTION").value.dictionary)
+
+        XCTAssertEqual(
+            dictionary["platformFiltersByRelativePath"],
+            .dictionary([
+                "Sources/File.swift": .array(["ios", "macos"]),
+            ])
+        )
     }
 
     func test_comment_describesTheSynchronizedFolderAndTarget() {

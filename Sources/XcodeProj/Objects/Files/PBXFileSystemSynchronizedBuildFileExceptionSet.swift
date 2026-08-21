@@ -25,6 +25,10 @@ public class PBXFileSystemSynchronizedBuildFileExceptionSet: PBXFileSystemSynchr
     /// This is used for example when linking frameworks to specify that they are optional with the attribute "Weak"
     public var attributesByRelativePath: [String: [String]]?
 
+    /// Platform filters by relative path.
+    /// Every item in the list is the relative path inside the root synchronized group.
+    public var platformFiltersByRelativePath: [String: [String]]?
+
     var targetReference: PBXObjectReference
 
     public var target: PBXTarget! {
@@ -43,13 +47,15 @@ public class PBXFileSystemSynchronizedBuildFileExceptionSet: PBXFileSystemSynchr
                 publicHeaders: [String]?,
                 privateHeaders: [String]?,
                 additionalCompilerFlagsByRelativePath: [String: String]?,
-                attributesByRelativePath: [String: [String]]?) {
+                attributesByRelativePath: [String: [String]]?,
+                platformFiltersByRelativePath: [String: [String]]? = nil) {
         targetReference = target.reference
         self.membershipExceptions = membershipExceptions
         self.publicHeaders = publicHeaders
         self.privateHeaders = privateHeaders
         self.additionalCompilerFlagsByRelativePath = additionalCompilerFlagsByRelativePath
         self.attributesByRelativePath = attributesByRelativePath
+        self.platformFiltersByRelativePath = platformFiltersByRelativePath
         super.init()
     }
 
@@ -62,6 +68,7 @@ public class PBXFileSystemSynchronizedBuildFileExceptionSet: PBXFileSystemSynchr
         case privateHeaders
         case additionalCompilerFlagsByRelativePath
         case attributesByRelativePath
+        case platformFiltersByRelativePath
     }
 
     public required init(from decoder: Decoder) throws {
@@ -75,6 +82,7 @@ public class PBXFileSystemSynchronizedBuildFileExceptionSet: PBXFileSystemSynchr
         privateHeaders = try container.decodeIfPresent(.privateHeaders)
         additionalCompilerFlagsByRelativePath = try container.decodeIfPresent(.additionalCompilerFlagsByRelativePath)
         attributesByRelativePath = try container.decodeIfPresent(.attributesByRelativePath)
+        platformFiltersByRelativePath = try container.decodeIfPresent(.platformFiltersByRelativePath)
         try super.init(from: decoder)
     }
 
@@ -114,6 +122,11 @@ public class PBXFileSystemSynchronizedBuildFileExceptionSet: PBXFileSystemSynchr
         }
         if let attributesByRelativePath {
             dictionary["attributesByRelativePath"] = .dictionary(Dictionary(uniqueKeysWithValues: attributesByRelativePath.map { key, value in
+                (CommentedString(key), .array(value.map { .string(CommentedString($0)) }))
+            }))
+        }
+        if let platformFiltersByRelativePath {
+            dictionary["platformFiltersByRelativePath"] = .dictionary(Dictionary(uniqueKeysWithValues: platformFiltersByRelativePath.map { key, value in
                 (CommentedString(key), .array(value.map { .string(CommentedString($0)) }))
             }))
         }

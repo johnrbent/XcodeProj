@@ -319,6 +319,7 @@ extension PBXFileSystemSynchronizedBuildFileExceptionSet {
         if targetReference != rhs.targetReference { return false }
         if publicHeaders != rhs.publicHeaders { return false }
         if privateHeaders != rhs.privateHeaders { return false }
+        if !NSDictionary(dictionary: platformFiltersByRelativePath ?? [:]).isEqual(NSDictionary(dictionary: rhs.platformFiltersByRelativePath ?? [:])) { return false }
         return super.isEqual(to: rhs)
     }
 }
