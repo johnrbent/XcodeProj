@@ -36,6 +36,8 @@ class CommentedStringTests: XCTestCase {
             "a_a": "a_a",
             "a a": "a a".quoted,
             "": "".quoted,
+            "false": "false",
+            "true": "true",
             "a\(quote)q\(quote)a": "a\(escapedQuote)q\(escapedQuote)a".quoted,
             "a\(quote)q\(quote)a".quoted: "\(escapedQuote)a\(escapedQuote)q\(escapedQuote)a\(escapedQuote)".quoted,
             "a\(escapedQuote)a\(escapedQuote)": "a\(escapedEscape)\(escapedQuote)a\(escapedEscape)\(escapedQuote)".quoted,

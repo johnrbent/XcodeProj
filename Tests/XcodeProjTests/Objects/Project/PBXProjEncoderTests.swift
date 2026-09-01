@@ -526,6 +526,42 @@
             line = lines.validate(line: ");", after: line)
         }
 
+        func test_buildSettings_preserveBooleanLookingStrings() throws {
+            try loadiOSProject()
+
+            let (configurationReference, configuration) = try XCTUnwrap(
+                proj.objects.buildConfigurations.first
+            )
+
+            configuration.buildSettings["SOURCE_TRUE"] = .string("true")
+            configuration.buildSettings["SOURCE_FALSE"] = .string("false")
+            configuration.buildSettings["SOURCE_ARRAY"] = .array([
+                "true",
+                "false",
+            ])
+
+            let data = try XCTUnwrap(proj.dataRepresentation())
+            let roundTrippedProject = try PBXProj(data: data)
+            let roundTrippedConfiguration = try XCTUnwrap(
+                roundTrippedProject.objects.buildConfigurations[
+                    configurationReference
+                ]
+            )
+
+            XCTAssertEqual(
+                roundTrippedConfiguration.buildSettings["SOURCE_TRUE"],
+                .string("true")
+            )
+            XCTAssertEqual(
+                roundTrippedConfiguration.buildSettings["SOURCE_FALSE"],
+                .string("false")
+            )
+            XCTAssertEqual(
+                roundTrippedConfiguration.buildSettings["SOURCE_ARRAY"],
+                .array(["true", "false"])
+            )
+        }
+
         // MARK: - Test internals
 
         private func encodeProject(settings: PBXOutputSettings = PBXOutputSettings(), line: UInt = #line) -> String {

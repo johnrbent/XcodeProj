@@ -35,8 +35,6 @@ struct CommentedString {
     var validString: String {
         switch string {
         case "": return "\"\""
-        case "false": return "NO"
-        case "true": return "YES"
         default: break
         }
 
