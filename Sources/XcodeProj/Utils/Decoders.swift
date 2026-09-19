@@ -38,6 +38,10 @@ class ProjectDecodingContext {
     }
 }
 
+private struct ProjectDecodingContextUserInfoValue: @unchecked Sendable {
+    let context: ProjectDecodingContext
+}
+
 // MARK: - CodingUserInfoKey (Context)
 
 extension CodingUserInfoKey {
@@ -50,7 +54,7 @@ final class XcodeprojJSONDecoder: JSONDecoder, @unchecked Sendable {
     /// Default init.
     init(context: ProjectDecodingContext = ProjectDecodingContext()) {
         super.init()
-        userInfo = [.context: context]
+        userInfo = [.context: ProjectDecodingContextUserInfoValue(context: context)]
     }
 }
 
@@ -59,7 +63,7 @@ final class XcodeprojPropertyListDecoder: PropertyListDecoder, @unchecked Sendab
     /// Default init.
     init(context: ProjectDecodingContext = ProjectDecodingContext()) {
         super.init()
-        userInfo = [.context: context]
+        userInfo = [.context: ProjectDecodingContextUserInfoValue(context: context)]
     }
 }
 
@@ -69,6 +73,6 @@ extension Decoder {
     /// Returns the decoding context.
     var context: ProjectDecodingContext {
         // swiftlint:disable:next force_cast
-        userInfo[.context] as! ProjectDecodingContext
+        (userInfo[.context] as! ProjectDecodingContextUserInfoValue).context
     }
 }
