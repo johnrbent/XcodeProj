@@ -62,10 +62,10 @@ final class PBXBuildRuleTests: XCTestCase {
             script: ["echo first", "", "echo last", ""]
         )
 
-        // cargo-xcode writes PBXBuildRule.script as an
-        // array. Xcode treats it as lines, including its final line boundary
-        // and any authored trailing empty line.
-        XCTAssertEqual(buildRule.script, "echo first\n\necho last\n\n")
+        XCTAssertEqual(buildRule.script, "echo first\n\necho last\n")
+        XCTAssertEqual(try decodeBuildRule(script: ["echo last"]).script, "echo last")
+        XCTAssertEqual(try decodeBuildRule(script: ["echo last", "", ""]).script, "echo last\n\n")
+        XCTAssertEqual(try decodeBuildRule(script: [String]()).script, "")
     }
 
     func test_decodingRejectsInvalidScriptArrayElements() throws {

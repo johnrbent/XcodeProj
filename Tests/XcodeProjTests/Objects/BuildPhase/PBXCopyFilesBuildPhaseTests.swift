@@ -93,6 +93,35 @@ final class PBXCopyFilesBuildPhaseTests: XCTestCase {
         XCTAssertEqual(phase.dstSubfolderSpec, .plugins)
     }
 
+    func test_init_decodesSymbolicSharedSupportDestination() throws {
+        var dictionary = testDictionary()
+        dictionary.removeValue(forKey: "dstSubfolderSpec")
+        dictionary["dstSubfolder"] = "SharedSupport"
+        let data = try JSONSerialization.data(withJSONObject: ["PHASE": dictionary])
+        let decoder = XcodeprojJSONDecoder()
+        let phase = try XCTUnwrap(
+            decoder.decode([String: PBXCopyFilesBuildPhase].self, from: data)["PHASE"]
+        )
+
+        XCTAssertEqual(phase.dstSubfolderSpec, .sharedSupport)
+    }
+
+    func test_init_decodesSymbolicNoneDestinationPreservingNumericPrecedence() throws {
+        for numericDestination: Int? in [nil, 12] {
+            var dictionary = testDictionary()
+            dictionary["dstSubfolderSpec"] = numericDestination
+            dictionary["dstSubfolder"] = "None"
+            dictionary["dstPath"] = "/usr/share/man/man1/"
+            let data = try JSONSerialization.data(withJSONObject: ["PHASE": dictionary])
+            let phase = try XCTUnwrap(
+                XcodeprojJSONDecoder().decode([String: PBXCopyFilesBuildPhase].self, from: data)["PHASE"]
+            )
+
+            XCTAssertEqual(phase.dstSubfolderSpec, numericDestination == nil ? .absolutePath : .sharedSupport)
+            XCTAssertEqual(phase.dstPath, "/usr/share/man/man1/")
+        }
+    }
+
     func test_init_decodesSymbolicProductDestination() throws {
         var dictionary = testDictionary()
         dictionary.removeValue(forKey: "dstSubfolderSpec")

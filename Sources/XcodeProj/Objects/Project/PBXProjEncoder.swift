@@ -488,8 +488,8 @@ final class PBXProjEncoder {
                 let lFile: PBXFileElement = lProjectRef.getObject()!
                 let rProjectRef = rhs["ProjectRef"]!
                 let rFile: PBXFileElement = rProjectRef.getObject()!
-                let lName = lFile.name!
-                let rName = rFile.name!
+                let lName = lFile.fileName() ?? ""
+                let rName = rFile.fileName() ?? ""
                 return lName.compare(rName, options: .caseInsensitive) == .orderedAscending
             })
         }

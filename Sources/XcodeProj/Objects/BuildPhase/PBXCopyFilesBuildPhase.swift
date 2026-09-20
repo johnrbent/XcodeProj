@@ -73,10 +73,14 @@ public final class PBXCopyFilesBuildPhase: PBXBuildPhase {
            let symbolicDestination: String = try container.decodeIfPresent(.dstSubfolder)
         {
             switch symbolicDestination.lowercased() {
+            case "none":
+                dstSubfolderSpec = .absolutePath
             case "plugins":
                 dstSubfolderSpec = .plugins
             case "product":
                 dstSubfolderSpec = .productsDirectory
+            case "sharedsupport":
+                dstSubfolderSpec = .sharedSupport
             default:
                 break
             }

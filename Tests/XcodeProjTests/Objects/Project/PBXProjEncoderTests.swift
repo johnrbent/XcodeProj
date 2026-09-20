@@ -372,6 +372,27 @@
 
         // MARK: - Projects
 
+        func test_ProjectReferenceOrderWithoutNamesRoundTrips() throws {
+            try loadProjectWithWrongProjectReferencesOrder()
+            let project = try XCTUnwrap(proj.rootProject())
+            for reference in project.projects {
+                try XCTUnwrap(reference["ProjectRef"]).name = nil
+            }
+            let expectedPaths = ["../Framework1/Framework1.xcodeproj", "../Framework2/Framework2.xcodeproj"]
+            let data = try XCTUnwrap(proj.dataRepresentation())
+            let decoded = try PBXProj(data: data)
+            let references = try XCTUnwrap(decoded.rootProject()).projects
+            XCTAssertEqual(references.compactMap { $0["ProjectRef"]?.path }, expectedPaths)
+            XCTAssertTrue(references.allSatisfy { $0["ProjectRef"]?.name == nil })
+
+            for reference in project.projects {
+                try XCTUnwrap(reference["ProjectRef"]).path = "Shared.xcodeproj"
+            }
+            let originalOrder = project.projectReferences.map { $0["ProjectRef"] }
+            _ = try proj.dataRepresentation()
+            XCTAssertEqual(project.projectReferences.map { $0["ProjectRef"] }, originalOrder)
+        }
+
         func test_ProjectReferenceOrder() throws {
             try loadProjectWithWrongProjectReferencesOrder()
 

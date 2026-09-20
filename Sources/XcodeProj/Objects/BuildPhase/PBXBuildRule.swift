@@ -110,12 +110,7 @@ public final class PBXBuildRule: PBXObject {
                 script = scalarScript
             } else {
                 let scriptLines = try container.decode([String].self, forKey: .script)
-                // Some project generators serialize a shell script as a PBX
-                // string array. Xcode interprets that spelling as lines and
-                // retains a final newline in the semantic script contents.
-                script = scriptLines.isEmpty
-                    ? ""
-                    : scriptLines.joined(separator: "\n") + "\n"
+                script = scriptLines.joined(separator: "\n")
             }
         } else {
             script = nil
